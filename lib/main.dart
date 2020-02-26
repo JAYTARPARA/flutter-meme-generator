@@ -15,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permissions_plugin/permissions_plugin.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(MyApp());
 
@@ -418,10 +419,51 @@ class _HomePageState extends State<HomePage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         RaisedButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             FocusScope.of(context)
                                                 .requestFocus(FocusNode());
-                                            createNewMeme('reset');
+                                            Alert(
+                                              context: context,
+                                              type: AlertType.warning,
+                                              style: AlertStyle(
+                                                animationType:
+                                                    AnimationType.fromTop,
+                                                isCloseButton: false,
+                                                // animationDuration: Duration(milliseconds: 400),
+                                              ),
+                                              title: "ALERT!!!",
+                                              desc:
+                                                  "Your all changes will be lost. Go ahead?",
+                                              buttons: [
+                                                DialogButton(
+                                                  color: Colors.black87,
+                                                  child: Text(
+                                                    "NO",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                                DialogButton(
+                                                  color: Colors.black87,
+                                                  child: Text(
+                                                    "YES",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Navigator.pop(context);
+                                                    createNewMeme('reset');
+                                                  },
+                                                ),
+                                              ],
+                                            ).show();
                                           },
                                           child: Text(
                                             "RESET MEME",
@@ -618,7 +660,7 @@ class _HomePageState extends State<HomePage> {
     final directory = (await getApplicationDocumentsDirectory()).path;
     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     Uint8List pngBytes = byteData.buffer.asUint8List();
-    File imgFile = new File('$directory/screenshot${rng.nextInt(200)}.png');
+    File imgFile = new File('$directory/meme${rng.nextInt(200)}.png');
     setState(() {
       _imageFile = imgFile;
     });

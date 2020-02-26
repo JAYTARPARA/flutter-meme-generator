@@ -5,10 +5,12 @@ import 'dart:async';
 
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:meme_generater/hero_photo_view_wrapper.dart';
+// import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:meme_generater/sidebar.dart';
 import 'package:image_gallery/image_gallery.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:photo_view/photo_view.dart';
 
 class MyMemes extends StatefulWidget {
   @override
@@ -70,18 +72,18 @@ class _MyMemesState extends State<MyMemes> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'Oops!!! There is nothing to show here. Start creating memes and share it.'
                               .toUpperCase(),
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.red,
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ],
@@ -104,6 +106,18 @@ class _MyMemesState extends State<MyMemes> {
                 ),
               ),
       ),
+      floatingActionButton: Visibility(
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              "/home",
+              (r) => false,
+            );
+          },
+          child: Icon(Icons.home),
+        ),
+      ),
     );
   }
 }
@@ -121,10 +135,28 @@ class _Tile extends StatelessWidget {
         children: <Widget>[
           new Stack(
             children: <Widget>[
-              new Center(
-                child: Image.file(
-                  File(filePath),
-                  fit: BoxFit.contain,
+              GestureDetector(
+                onTap: () {
+                  print(filePath);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HeroPhotoViewWrapper(
+                        imageProvider: filePath,
+                        minScale: PhotoViewComputedScale.contained * 0.8,
+                        showTag: 'Meme ${index + 1}',
+                        backgroundDecoration: BoxDecoration(
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: new Center(
+                  child: Image.file(
+                    File(filePath),
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ],
